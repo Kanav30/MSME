@@ -242,8 +242,8 @@ if st.session_state.user_role is None:
         st.markdown("<div class='auth-card'>", unsafe_allow_html=True)
         st.markdown("<p class='eyebrow'>Borrower access</p>", unsafe_allow_html=True)
         st.markdown("### MSME Self-Assessment")
-        st.write("Fetch your alternate data through a consent-based pull, view your "
-                 "five-pillar health score, run what-if scenarios, and generate a health certificate.")
+        st.write("Securely retrieve your business data through a consent-based Account Aggregator flow. "
+                 "Review your Financial Health Score, explore different business scenarios, and download your Financial Health Card. ")
         if st.button("Enter as MSME", use_container_width=True, type="primary"):
             st.session_state.user_role = "msme"
             st.rerun()
