@@ -226,8 +226,6 @@ def render_factors(explain: dict):
 # LOGIN
 # ===========================================================================
 if st.session_state.user_role is None:
-    st.markdown("<p class='eyebrow' style='text-align:center;'>Alternate-Data Credit Infrastructure</p>",
-                unsafe_allow_html=True)
     st.markdown("<h1 style='text-align:center; margin-top:0;'>MSME Financial Health Card</h1>",
                 unsafe_allow_html=True)
     st.markdown(
@@ -263,14 +261,6 @@ if st.session_state.user_role is None:
             else:
                 st.error("Incorrect access code.")
         st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<p style='text-align:center; color:var(--muted); font-size:12px; margin-top:34px;'>"
-        "Demo build. Data sources are simulated via an Account Aggregator / OCEN mock layer. "
-        "Outputs are not credit decisions.</p>",
-        unsafe_allow_html=True,
-    )
-
 # ===========================================================================
 # MSME SELF-ASSESSMENT
 # ===========================================================================
