@@ -476,11 +476,7 @@ elif st.session_state.user_role == "rm":
                 "Recommended action": action,
             })
         df = pd.DataFrame(rows).sort_values("Health score", ascending=False)
-        st.dataframe(
-            df, use_container_width=True, hide_index=True,
-            column_config={"Health score": st.column_config.ProgressColumn(
-                "Health score", min_value=300, max_value=900, format="%d")},
-        )
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
     else:
         chosen = st.selectbox("Account", list(rm_db.keys()))
