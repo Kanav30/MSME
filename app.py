@@ -201,7 +201,7 @@ def render_pillars(pillars: list[dict]):
 
 
 def render_factors(explain: dict):
-    st.markdown("<p class='eyebrow'>Key Strengths</p>", unsafe_allow_html=True)
+    st.markdown("<p class='eyebrow'>Top score drivers</p>", unsafe_allow_html=True)
     for item in explain["positive"][:3]:
         st.markdown(
             f"<div class='factor'><div><div class='factor-name'>{item['factor']}</div>"
@@ -209,7 +209,7 @@ def render_factors(explain: dict):
             f"<div class='factor-pos'>{item['impact']}</div></div>",
             unsafe_allow_html=True,
         )
-    st.markdown("<p class='eyebrow' style='margin-top:16px;'>Improvement Areas</p>", unsafe_allow_html=True)
+    st.markdown("<p class='eyebrow' style='margin-top:16px;'>Top score detractors</p>", unsafe_allow_html=True)
     if not explain["negative"]:
         st.markdown("<div class='factor'><div class='factor-name'>No material detractors identified.</div></div>",
                     unsafe_allow_html=True)
@@ -226,6 +226,8 @@ def render_factors(explain: dict):
 # LOGIN
 # ===========================================================================
 if st.session_state.user_role is None:
+    st.markdown("<p class='eyebrow' style='text-align:center;'>Alternate-Data Credit Infrastructure</p>",
+                unsafe_allow_html=True)
     st.markdown("<h1 style='text-align:center; margin-top:0;'>MSME Financial Health Card</h1>",
                 unsafe_allow_html=True)
     st.markdown(
@@ -240,8 +242,8 @@ if st.session_state.user_role is None:
         st.markdown("<div class='auth-card'>", unsafe_allow_html=True)
         st.markdown("<p class='eyebrow'>Borrower access</p>", unsafe_allow_html=True)
         st.markdown("### MSME Self-Assessment")
-        st.write("Securely retrieve your business data through a consent-based Account Aggregator flow. "
-                 "Review your Financial Health Score, explore different business scenarios, and download your Financial Health Card. ")
+        st.write("Fetch your alternate data through a consent-based pull, view your "
+                 "five-pillar health score, run what-if scenarios, and generate a health certificate.")
         if st.button("Enter as MSME", use_container_width=True, type="primary"):
             st.session_state.user_role = "msme"
             st.rerun()
@@ -251,7 +253,8 @@ if st.session_state.user_role is None:
         st.markdown("<div class='auth-card'>", unsafe_allow_html=True)
         st.markdown("<p class='eyebrow'>Lender access</p>", unsafe_allow_html=True)
         st.markdown("### Credit Officer Console")
-        st.write("Identify high-potential MSMEs, review Financial Health Scores, understand key risk drivers, and discover suitable lending opportunities. ")
+        st.write("Review a prioritized lead queue and drill into per-borrower assessments "
+                 "with pillar-level explainability.")
         code = st.text_input("Access code", type="password", help="Demo credential: idbi2026")
         if st.button("Sign in", use_container_width=True):
             if code == RM_ACCESS_CODE:
@@ -263,7 +266,7 @@ if st.session_state.user_role is None:
 
     st.markdown(
         "<p style='text-align:center; color:var(--muted); font-size:12px; margin-top:34px;'>"
-        "Demonstration prototype using simulated Account Aggregator and OCEN integrations. "
+        "Demo build. Data sources are simulated via an Account Aggregator / OCEN mock layer. "
         "Outputs are not credit decisions.</p>",
         unsafe_allow_html=True,
     )
@@ -382,7 +385,7 @@ elif st.session_state.user_role == "msme":
             st.write(res["ai_insight"])
             st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
             st.markdown(
-                f"<p class='eyebrow'>Recommended Banking Product</p>"
+                f"<p class='eyebrow'>Matched credit product</p>"
                 f"<div style='font-size:18px; font-weight:600; margin-bottom:2px;'>{need['product']}</div>"
                 f"<div class='factor-detail'>{need['need']} · confidence {need['confidence']} · "
                 f"opportunity {res['opportunity_score']}%</div>",
@@ -432,7 +435,7 @@ elif st.session_state.user_role == "rm":
     st.markdown("<p class='eyebrow'>Lender view</p>", unsafe_allow_html=True)
     st.markdown("<h2 style='margin-top:0;'>Credit Officer Console</h2>", unsafe_allow_html=True)
 
-    view = st.radio("View", ["Priority queue", "Customer Assessment"], horizontal=True, label_visibility="collapsed")
+    view = st.radio("View", ["Priority queue", "Borrower deep-dive"], horizontal=True, label_visibility="collapsed")
     st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 
     rm_db = {
@@ -454,7 +457,7 @@ elif st.session_state.user_role == "rm":
     }
 
     if view == "Priority queue":
-        st.markdown("<p class='eyebrow'>Businesses identified as high-potential lending opportunities based on alternate financial data.</p>",
+        st.markdown("<p class='eyebrow'>Accounts with strong alternate-data signals and no existing credit line</p>",
                     unsafe_allow_html=True)
         rows = []
         for name, prof in rm_db.items():
