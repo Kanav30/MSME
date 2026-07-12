@@ -18,17 +18,26 @@ from scorecard import compute_scorecard
 # ---------------------------------------------------------------------------
 # Optional ML cross-check model (secondary signal only)
 # ---------------------------------------------------------------------------
+# The pickled RandomForest was trained on scikit-learn 1.6.1 with a specific
+# numpy build. Unpickling it against a different numpy can crash the process at
+# the native level (a segfault Python can't catch) rather than raising cleanly.
+# Since the ML model is only a secondary cross-check — the transparent scorecard
+# is the decision score — we DON'T load it unless explicitly enabled via
+# ENABLE_ML_CROSSCHECK=1. This keeps the hosted app crash-proof; the API
+# (main.py) can still enable it in a matched local environment.
 _ml_model = None
 _ML_FEATURES: list[str] = []
-try:
-    import joblib
 
-    _MODEL_PATH = os.getenv("MODEL_PATH", "msme_health_model.pkl")
-    _ml_model = joblib.load(_MODEL_PATH)
-    _ML_FEATURES = list(getattr(_ml_model, "feature_names_in_", []))
-except Exception:  # noqa: BLE001 - model is optional; degrade silently
-    _ml_model = None
-    _ML_FEATURES = []
+if os.getenv("ENABLE_ML_CROSSCHECK", "0") == "1":
+    try:
+        import joblib
+
+        _MODEL_PATH = os.getenv("MODEL_PATH", "msme_health_model.pkl")
+        _ml_model = joblib.load(_MODEL_PATH)
+        _ML_FEATURES = list(getattr(_ml_model, "feature_names_in_", []))
+    except Exception:  # noqa: BLE001 - model is optional; degrade silently
+        _ml_model = None
+        _ML_FEATURES = []
 
 
 def ml_is_loaded() -> bool:
